@@ -24,18 +24,15 @@
         });
 
         // From other clients
-        socket.on('hello', data => {
-            console.log('hello DATA: ', data);
-        });
-
-        socket.on('hello', (counter) => {
-            $events.appendChild(newItem(`hello - ${counter}`));
+        socket.on('server_data', data => {
+            console.log('server_data DATA: ', data);
+            $events.appendChild(newItem(`server_data - ${counter}`));
         });
 
         let counter = 0;
         setInterval(() => {
             ++counter;
-            socket.emit('hey', { counter }); // the object will be serialized for you
+            socket.emit('client_data', { counter }); // the object will be serialized for you
         }, 1000);
     </script>
 </body>
