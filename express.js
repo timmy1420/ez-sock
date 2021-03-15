@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const httpServer = require('http').Server(app);
-const port = 3000;
+const port = 5001;
 const io = require('socket.io')(httpServer);
 
 // App setting

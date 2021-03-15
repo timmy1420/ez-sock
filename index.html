@@ -19,7 +19,7 @@
             return item;
         };
 
-        const socket = io.connect('http://localhost:3000'),
+        const socket = io.connect('http://localhost:5001'),
             channel = Math.random().toString(36).substr(2, 5);
 
         socket.on('connect', function() {
