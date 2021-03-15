@@ -14,11 +14,25 @@ app.post('/event_api', (req, res) => {
     const { event, message, channel } = req.body;
     if ( logging ) console.log('API Body: ', req.body);
 
+    if ( event == '') {
+      res.send({
+        'message': "event cannot be empty",
+        'success': true
+      });
+      return;
+    }
+
     if ( channel ) {
-        io.sockets.in(channel).emit('server_data', message);
-        res.send('Message sent to channel!');
+        io.sockets.in(channel).emit( event , message);
+        res.send({
+          'message': 'Message sent to channel!',
+          'success': true
+        });
     } else {
-        res.send('Message sent without channel!');
+        res.send({
+          'message': 'Message sent without channel!',
+          'success': true
+        });
     }
 });
 
@@ -33,7 +47,15 @@ io.sockets.on('connection', function(socket) {
       io.sockets.in(channel).emit('server_data', `Server ready for channel: ${channel}`);
     });
 
-    // console.log("All sockets:", io.sockets);
+    socket.on('leave_channel', function(channel) {
+      socket.leave(channel);
+  
+      console.log("Leaving channel: " + channel);
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("DISCONNECT");
+    });
 });
 
 httpServer.listen(port, () => {

@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Minimal working example</title>
 </head>
 <body>
+    <button onclick="disconnect()">DISCONNECT</button>
+    <button onclick="connect()">CONNECT</button>
     <ul id="events"></ul>
 
     <!-- <script src="/socket.io/socket.io.js"></script> -->
@@ -22,10 +23,9 @@
             channel = Math.random().toString(36).substr(2, 5);
 
         socket.on('connect', function() {
-            // Connected, let's sign-up for to receive messages for this channel
             $events.appendChild(newItem('connect: ' + channel));
             console.log("Connecting now");
-            socket.emit('join_channel', channel);
+            connect();
         });
 
         // From other clients
@@ -33,6 +33,14 @@
             console.log('server_data DATA: ', data);
             $events.appendChild(newItem(`server_data - ${data}`));
         });
+
+        disconnect = () => {
+            socket.emit('leave_channel', channel);
+        }
+
+        connect = () => {
+            socket.emit('join_channel', channel);
+        }
     </script>
 </body>
 </html>
