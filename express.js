@@ -26,7 +26,7 @@ app.post('/event_api', (req, res) => {
 io.sockets.on('connection', function(socket) {
     console.log('connect');
     // once a client has connected, we expect to get a ping from them saying what room they want to join
-    socket.on('channel', function(channel) {
+    socket.on('join_channel', function(channel) {
       socket.join(channel);
   
       console.log("Incoming channel: " + channel);

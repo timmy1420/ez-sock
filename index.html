@@ -25,7 +25,7 @@
             // Connected, let's sign-up for to receive messages for this channel
             $events.appendChild(newItem('connect: ' + channel));
             console.log("Connecting now");
-            socket.emit('channel', channel);
+            socket.emit('join_channel', channel);
         });
 
         // From other clients
