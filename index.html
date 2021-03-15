@@ -7,33 +7,32 @@
 <body>
     <ul id="events"></ul>
 
-    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="socket.io.min.js"></script>
     <script>
         const $events = document.getElementById('events');
 
         const newItem = (content) => {
-          const item = document.createElement('li');
-          item.innerText = content;
-          return item;
+            const item = document.createElement('li');
+            item.innerText = content;
+            return item;
         };
 
-        const socket = io();
+        const socket = io.connect('http://localhost:3000'),
+            channel = Math.random().toString(36).substr(2, 5);
 
-        socket.on('connect', () => {
-          $events.appendChild(newItem('connect'));
+        socket.on('connect', function() {
+            // Connected, let's sign-up for to receive messages for this channel
+            $events.appendChild(newItem('connect: ' + channel));
+            console.log("Connecting now");
+            socket.emit('channel', channel);
         });
 
         // From other clients
         socket.on('server_data', data => {
             console.log('server_data DATA: ', data);
-            $events.appendChild(newItem(`server_data - ${counter}`));
+            $events.appendChild(newItem(`server_data - ${data}`));
         });
-
-        let counter = 0;
-        setInterval(() => {
-            ++counter;
-            socket.emit('client_data', { counter }); // the object will be serialized for you
-        }, 1000);
     </script>
 </body>
 </html>
