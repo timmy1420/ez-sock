@@ -2,7 +2,11 @@ const express = require('express');
 const app = express();
 const httpServer = require('http').Server(app);
 const port = 5001;
-const io = require('socket.io')(httpServer);
+const io = require('socket.io')(httpServer, {
+  cors: {
+    origin: '*',
+  }
+});
 
 // App setting
 const logging = true;
