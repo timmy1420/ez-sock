@@ -4,7 +4,7 @@ const httpServer = require('http').Server(app);
 const port = 5001;
 const io = require('socket.io')(httpServer, {
   cors: {
-    origin: '*',
+    origin: '*'
   }
 });
 
@@ -38,6 +38,31 @@ app.post('/event_api', (req, res) => {
           'success': true
         });
     }
+});
+
+/**
+ * Verify if there are clients in a channel
+ */
+app.post('/channel_clients', (req, res) => {
+  const { channel } = req.body;
+  if ( logging ) console.log('API Body: ', req.body);
+  
+  if ( channel ) {
+    var clients = [];
+
+    for ( const key of io.sockets.adapter.rooms.keys() )
+      if ( key == channel ) clients.push(channel);
+  
+    res.send({
+      'clients': clients,
+      'success': clients.length > 0
+    });
+  } else {
+      res.send({
+        'message': 'Channel is required',
+        'success': false
+      });
+  }
 });
 
 // handle incoming connections from clients
