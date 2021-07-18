@@ -44,15 +44,26 @@ app.post('/event_api', (req, res) => {
  * Verify if there are clients in a channel
  */
 app.post('/channel_clients', (req, res) => {
+  /**
+   * TODO: Create an array for channels.
+   * Also send array results for all passed channels
+   */
   const { channel } = req.body;
   if ( logging ) console.log('API Body: ', req.body);
   
   if ( channel ) {
     var clients = [];
 
-    for ( const key of io.sockets.adapter.rooms.keys() )
-      if ( key == channel ) clients.push(channel);
-  
+    if ( typeof channel === 'object' ) {
+      channel.forEach(sliced_channel => {
+        for ( const key of io.sockets.adapter.rooms.keys() )
+          if ( key == sliced_channel ) clients.push(sliced_channel);
+      });
+    } else if ( typeof channel === 'string' ) {
+      for ( const key of io.sockets.adapter.rooms.keys() )
+        if ( key == channel ) clients.push(channel);
+    }
+
     res.send({
       'clients': clients,
       'success': clients.length > 0
