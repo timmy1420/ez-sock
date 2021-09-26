@@ -76,9 +76,32 @@ app.post('/channel_clients', (req, res) => {
   }
 });
 
+let reserved_events = [
+  'join_channel',
+  'leave_channel',
+  'disconnect',
+];
+
 // handle incoming connections from clients
 io.sockets.on('connection', function(socket) {
     console.log('connect');
+
+    var socket_id = socket.client.conn.id;
+    console.log(socket);
+
+    socket.onAny((eventName, channel, data) => {
+      // Match current event with preserved events
+      var preserved_event = reserved_events.find( reserved_event => reserved_event === eventName);
+
+      // Don't emit if the event is a preserved action event
+      if ( preserved_event === undefined ) {
+        console.log("Whisper from: " + channel + " using socket ID " + socket_id);
+
+        // Broadcast to others without sender
+        socket.broadcast.to(channel).emit(eventName, `Whisper for channel: ${data}`);
+      }
+    });
+
     // once a client has connected, we expect to get a ping from them saying what room they want to join
     socket.on('join_channel', function(channel) {
       socket.join(channel);
@@ -94,7 +117,7 @@ io.sockets.on('connection', function(socket) {
     });
 
     socket.on("disconnect", (reason) => {
-      console.log("DISCONNECT");
+      console.log("DISCONNECT: ", socket_id);
     });
 });
 

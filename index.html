@@ -6,6 +6,7 @@
 <body>
     <button onclick="disconnect()">DISCONNECT</button>
     <button onclick="connect()">CONNECT</button>
+    <button onclick="client_emit()">CLIENT EMIT</button>
     <ul id="events"></ul>
 
     <!-- <script src="/socket.io/socket.io.js"></script> -->
@@ -34,12 +35,21 @@
             $events.appendChild(newItem(`server_data - ${data}`));
         });
 
+        socket.on('my_custom_event', data => {
+            console.log('my_custom_event DATA: ', data);
+            $events.appendChild(newItem(`my_custom_event - ${data}`));
+        });
+
         disconnect = () => {
             socket.emit('leave_channel', channel);
         }
 
         connect = () => {
             socket.emit('join_channel', channel);
+        }
+
+        client_emit = () => {
+            socket.emit('my_custom_event', channel, "I'm typing here");
         }
     </script>
 </body>
