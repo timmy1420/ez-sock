@@ -110,7 +110,7 @@ io.sockets.on('connection', function(socket) {
         'channel': channel
       });
 
-      io.sockets.in(channel).emit('on_connect', `${socket_id} connected on ${disconnected_client.channel} (${socket_ids.length})`);
+      io.sockets.in(channel).emit('on_connect', `${socket_id} connected on ${channel} (${socket_ids.length})`);
   
       console.log("Incoming channel: " + channel);
     });
