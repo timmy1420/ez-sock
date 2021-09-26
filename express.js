@@ -14,6 +14,8 @@ const logging = true;
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
+var socket_ids = [];
+
 app.post('/event_api', (req, res) => {
     const { event, message, channel } = req.body;
     if ( logging ) console.log('API Body: ', req.body);
@@ -66,6 +68,9 @@ app.post('/channel_clients', (req, res) => {
 
     res.send({
       'clients': clients,
+      'socket_ids': socket_ids.filter(function(client){ 
+        return client.channel === channel; 
+      }),
       'success': clients.length > 0
     });
   } else {
@@ -87,7 +92,6 @@ io.sockets.on('connection', function(socket) {
     console.log('connect');
 
     var socket_id = socket.client.conn.id;
-    console.log(socket);
 
     socket.onAny((eventName, channel, data) => {
       // Match current event with preserved events
@@ -105,6 +109,12 @@ io.sockets.on('connection', function(socket) {
     // once a client has connected, we expect to get a ping from them saying what room they want to join
     socket.on('join_channel', function(channel) {
       socket.join(channel);
+
+      // Add socket id to clients
+      socket_ids.push({
+        'socket_id': socket_id, 
+        'channel': channel
+      });
   
       console.log("Incoming channel: " + channel);
       io.sockets.in(channel).emit('server_data', `Server ready for channel: ${channel}`);
@@ -118,6 +128,12 @@ io.sockets.on('connection', function(socket) {
 
     socket.on("disconnect", (reason) => {
       console.log("DISCONNECT: ", socket_id);
+
+      // Remove disconnected socket id from clients
+      socket_ids = socket_ids.filter(function(client){ 
+        return client.socket_id !== socket_id; 
+      });
+
     });
 });
 
