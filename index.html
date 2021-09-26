@@ -30,9 +30,14 @@
         });
 
         // From other clients
-        socket.on('server_data', data => {
-            console.log('server_data DATA: ', data);
-            $events.appendChild(newItem(`server_data - ${data}`));
+        socket.on('on_connect', data => {
+            console.log('on_connect DATA: ', data);
+            $events.appendChild(newItem(`${data}`));
+        });
+
+        socket.on('on_disconnect', data => {
+            console.log('on_disconnect DATA: ', data);
+            $events.appendChild(newItem(`${data}`));
         });
 
         socket.on('my_custom_event', data => {

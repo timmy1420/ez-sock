@@ -68,9 +68,7 @@ app.post('/channel_clients', (req, res) => {
 
     res.send({
       'clients': clients,
-      'socket_ids': socket_ids.filter(function(client){ 
-        return client.channel === channel; 
-      }),
+      'socket_ids': socket_ids.filter( client => client.channel === channel ),
       'success': clients.length > 0
     });
   } else {
@@ -115,9 +113,10 @@ io.sockets.on('connection', function(socket) {
         'socket_id': socket_id, 
         'channel': channel
       });
+
+      io.sockets.in(channel).emit('on_connect', `${socket_id} connected (${socket_ids.length})`);
   
       console.log("Incoming channel: " + channel);
-      io.sockets.in(channel).emit('server_data', `Server ready for channel: ${channel}`);
     });
 
     socket.on('leave_channel', function(channel) {
@@ -129,11 +128,12 @@ io.sockets.on('connection', function(socket) {
     socket.on("disconnect", (reason) => {
       console.log("DISCONNECT: ", socket_id);
 
-      // Remove disconnected socket id from clients
-      socket_ids = socket_ids.filter(function(client){ 
-        return client.socket_id !== socket_id; 
-      });
+      // Broadcast to other clients
+      var disconnected_client = socket_ids.find( client => client.socket_id === socket_id);
+      io.sockets.in(disconnected_client.channel).emit('on_disconnect', `${disconnected_client.socket_id} disconnected (${socket_ids.length})`);
 
+      // Remove disconnected socket id from clients
+      socket_ids = socket_ids.filter( client => client.socket_id !== socket_id );
     });
 });
 
