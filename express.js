@@ -46,10 +46,6 @@ app.post('/event_api', (req, res) => {
  * Verify if there are clients in a channel
  */
 app.post('/channel_clients', (req, res) => {
-  /**
-   * TODO: Create an array for channels.
-   * Also send array results for all passed channels
-   */
   const { channel } = req.body;
   if ( logging ) console.log('API Body: ', req.body);
   
