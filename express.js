@@ -109,7 +109,13 @@ io.sockets.on('connection', function(socket) {
         'channel': channel
       });
 
-      io.sockets.in(channel).emit('on_connect', `${socket_id} connected on ${channel} (${socket_ids.length})`);
+      // io.sockets.in(channel).emit('on_connect', `${socket_id} connected on ${channel} (${socket_ids.length})`);
+      io.sockets.in(channel).emit('on_connect', {
+        'action': 'connect', 
+        'socket_id': socket_id,
+        'channel': channel,
+        'connected_clients': socket_ids.length
+      });
   
       console.log("Incoming channel: " + channel);
     });
@@ -125,15 +131,24 @@ io.sockets.on('connection', function(socket) {
 
       // Broadcast to other clients
       var disconnected_client = socket_ids.find( client => client.socket_id === socket_id);
+      
+      // Remove disconnected socket id from clients
+      socket_ids = socket_ids.filter( client => client.socket_id !== socket_id );
+      
       try {
         if ( disconnected_client.channel !== undefined )
-          io.sockets.in(disconnected_client.channel).emit('on_disconnect', `${disconnected_client.socket_id} disconnected from ${disconnected_client.channel} (${socket_ids.length})`);
+          // io.sockets.in(disconnected_client.channel).emit('on_disconnect', `${disconnected_client.socket_id} disconnected from ${disconnected_client.channel} (${socket_ids.length})`);
+          io.sockets.in(disconnected_client.channel).emit('on_disconnect', {
+            'action': 'disconnect', 
+            'socket_id': disconnected_client.socket_id,
+            'channel': disconnected_client.channel,
+            'connected_clients': socket_ids.length
+          });
       } catch (error) {
         console.log('DISCONNECT ERROR: ' + error);
       }
 
-      // Remove disconnected socket id from clients
-      socket_ids = socket_ids.filter( client => client.socket_id !== socket_id );
+      
     });
 });
 
