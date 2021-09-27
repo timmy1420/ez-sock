@@ -84,7 +84,7 @@ let reserved_events = [
 // handle incoming connections from clients
 io.sockets.on('connection', function(socket) {
   var socket_id = socket.client.conn.id;
-  console.log('connect from :', socket_id);
+  console.log('connect from: ', socket_id);
 
     socket.onAny((eventName, channel, data) => {
       // Match current event with preserved events
