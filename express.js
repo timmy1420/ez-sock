@@ -129,25 +129,26 @@ io.sockets.on('connection', function(socket) {
     socket.on("disconnect", (reason) => {
       console.log("DISCONNECT: ", socket_id);
 
-      // Broadcast to other clients
-      var disconnected_client = socket_ids.find( client => client.socket_id === socket_id);
-      
-      // Remove disconnected socket id from clients
-      socket_ids = socket_ids.filter( client => client.socket_id !== socket_id );
-      
       try {
+        // Broadcast to other clients
+        let disconnected_client = socket_ids.find( client => client.socket_id === socket_id),
+        client_channel = disconnected_client.channel,
+        total_channel_clients = socket_ids.filter( client => client.channel !== client_channel );
+
+        // Remove disconnected socket id from clients
+        // socket_ids = socket_ids.filter( client => client.socket_id !== socket_id );
+
         if ( disconnected_client.channel !== undefined )
           // io.sockets.in(disconnected_client.channel).emit('on_disconnect', `${disconnected_client.socket_id} disconnected from ${disconnected_client.channel} (${socket_ids.length})`);
           io.sockets.in(disconnected_client.channel).emit('on_disconnect', {
             'action': 'disconnect', 
             'socket_id': disconnected_client.socket_id,
             'channel': disconnected_client.channel,
-            'connected_clients': socket_ids.length
+            'connected_clients': total_channel_clients.length
           });
       } catch (error) {
         console.log('DISCONNECT ERROR: ' + error);
       }
-
       
     });
 });
