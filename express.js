@@ -109,12 +109,14 @@ io.sockets.on('connection', function(socket) {
         'channel': channel
       });
 
+      let total_channel_clients = socket_ids.filter( client => client.channel === channel );
+
       // io.sockets.in(channel).emit('on_connect', `${socket_id} connected on ${channel} (${socket_ids.length})`);
       io.sockets.in(channel).emit('on_connect', {
         'action': 'connect', 
         'socket_id': socket_id,
         'channel': channel,
-        'connected_clients': socket_ids.length
+        'connected_clients': total_channel_clients.length
       });
   
       console.log("Incoming channel: " + channel);
