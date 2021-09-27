@@ -14,7 +14,7 @@ const logging = true;
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
-var socket_ids = [];
+let socket_ids = [];
 
 app.post('/event_api', (req, res) => {
     const { event, message, channel } = req.body;
@@ -50,7 +50,7 @@ app.post('/channel_clients', (req, res) => {
   if ( logging ) console.log('API Body: ', req.body);
   
   if ( channel ) {
-    var clients = [];
+    let clients = [];
 
     if ( typeof channel === 'object' ) {
       channel.forEach(sliced_channel => {
@@ -83,12 +83,12 @@ let reserved_events = [
 
 // handle incoming connections from clients
 io.sockets.on('connection', function(socket) {
-  var socket_id = socket.client.conn.id;
+  let socket_id = socket.client.conn.id;
   console.log('connect from: ', socket_id);
 
     socket.onAny((eventName, channel, data) => {
       // Match current event with preserved events
-      var preserved_event = reserved_events.find( reserved_event => reserved_event === eventName);
+      let preserved_event = reserved_events.find( reserved_event => reserved_event === eventName);
 
       // Don't emit if the event is a preserved action event
       if ( preserved_event === undefined ) {
@@ -134,11 +134,12 @@ io.sockets.on('connection', function(socket) {
       try {
         // Broadcast to other clients
         let disconnected_client = socket_ids.find( client => client.socket_id === socket_id),
-        client_channel = disconnected_client.channel,
-        total_channel_clients = socket_ids.filter( client => client.channel === client_channel );
+        client_channel = disconnected_client.channel;
 
         // Remove disconnected socket id from clients
-        // socket_ids = socket_ids.filter( client => client.socket_id !== socket_id );
+        socket_ids = socket_ids.filter( client => client.socket_id !== socket_id );
+
+        let total_channel_clients = socket_ids.filter( client => client.channel === client_channel );
 
         if ( disconnected_client.channel !== undefined )
           // io.sockets.in(disconnected_client.channel).emit('on_disconnect', `${disconnected_client.socket_id} disconnected from ${disconnected_client.channel} (${socket_ids.length})`);
