@@ -133,7 +133,7 @@ io.sockets.on('connection', function(socket) {
         // Broadcast to other clients
         let disconnected_client = socket_ids.find( client => client.socket_id === socket_id),
         client_channel = disconnected_client.channel,
-        total_channel_clients = socket_ids.filter( client => client.channel !== client_channel );
+        total_channel_clients = socket_ids.filter( client => client.channel === client_channel );
 
         // Remove disconnected socket id from clients
         // socket_ids = socket_ids.filter( client => client.socket_id !== socket_id );
