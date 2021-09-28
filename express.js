@@ -95,7 +95,7 @@ io.sockets.on('connection', function(socket) {
         console.log("Whisper from: " + channel + " using socket ID " + socket_id);
 
         // Broadcast to others without sender
-        socket.broadcast.to(channel).emit(eventName, `Whisper for channel: ${data}`);
+        socket.broadcast.to(channel).emit(eventName, data);
       }
     });
 
