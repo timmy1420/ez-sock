@@ -16,6 +16,18 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 
 let socket_ids = [];
 
+const JOIN_CHANNEL = 'join_channel',
+      LEAVE_CHANNEL = 'leave_channel',
+      DISCONNECT = 'disconnect',
+      ON_DISCONNECT = 'on_disconnect',
+      ON_CONNECT = 'on_connect';
+
+let reserved_events = [
+  JOIN_CHANNEL,
+  LEAVE_CHANNEL,
+  DISCONNECT,
+];
+
 app.post('/event_api', (req, res) => {
     const { event, message, channel } = req.body;
     if ( logging ) console.log('API Body: ', req.body);
@@ -75,12 +87,6 @@ app.post('/channel_clients', (req, res) => {
   }
 });
 
-let reserved_events = [
-  'join_channel',
-  'leave_channel',
-  'disconnect',
-];
-
 // handle incoming connections from clients
 io.sockets.on('connection', function(socket) {
   let socket_id = socket.client.conn.id;
@@ -100,7 +106,7 @@ io.sockets.on('connection', function(socket) {
     });
 
     // once a client has connected, we expect to get a ping from them saying what room they want to join
-    socket.on('join_channel', function(channel) {
+    socket.on(JOIN_CHANNEL, function(channel) {
       socket.join(channel);
 
       // Add socket id to clients
@@ -112,7 +118,7 @@ io.sockets.on('connection', function(socket) {
       let total_channel_clients = socket_ids.filter( client => client.channel === channel );
 
       // io.sockets.in(channel).emit('on_connect', `${socket_id} connected on ${channel} (${socket_ids.length})`);
-      io.sockets.in(channel).emit('on_connect', {
+      io.sockets.in(channel).emit(ON_CONNECT, {
         'action': 'connect', 
         'socket_id': socket_id,
         'channel': channel,
@@ -122,13 +128,13 @@ io.sockets.on('connection', function(socket) {
       console.log("Incoming channel: " + channel);
     });
 
-    socket.on('leave_channel', function(channel) {
+    socket.on(LEAVE_CHANNEL, function(channel) {
       socket.leave(channel);
   
       console.log("Leaving channel: " + channel);
     });
 
-    socket.on("disconnect", (reason) => {
+    socket.on(DISCONNECT, (reason) => {
       console.log("DISCONNECT: ", socket_id);
 
       try {
@@ -143,7 +149,7 @@ io.sockets.on('connection', function(socket) {
 
         if ( disconnected_client.channel !== undefined )
           // io.sockets.in(disconnected_client.channel).emit('on_disconnect', `${disconnected_client.socket_id} disconnected from ${disconnected_client.channel} (${socket_ids.length})`);
-          io.sockets.in(disconnected_client.channel).emit('on_disconnect', {
+          io.sockets.in(disconnected_client.channel).emit(ON_DISCONNECT, {
             'action': 'disconnect', 
             'socket_id': disconnected_client.socket_id,
             'channel': disconnected_client.channel,
