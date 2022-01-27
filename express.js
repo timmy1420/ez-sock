@@ -76,6 +76,10 @@ app.post('/channel_clients', (req, res) => {
 
     res.send({
       'clients': clients,
+
+      /**
+       * FIXME: Bij een array van channels, is dit leeg
+       */
       'socket_ids': socket_ids.filter( client => client.channel === channel ),
       'success': clients.length > 0
     });
