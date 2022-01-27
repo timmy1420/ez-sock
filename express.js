@@ -106,13 +106,16 @@ io.sockets.on('connection', function(socket) {
     });
 
     // once a client has connected, we expect to get a ping from them saying what room they want to join
-    socket.on(JOIN_CHANNEL, function(channel) {
+    socket.on(JOIN_CHANNEL, function(channel, identifier) {
       socket.join(channel);
+
+      identifier = ( identifier !== undefined ) ? identifier : null;
 
       // Add socket id to clients
       socket_ids.push({
-        'socket_id': socket_id, 
-        'channel': channel
+        socket_id, 
+        identifier, 
+        channel
       });
 
       let total_channel_clients = socket_ids.filter( client => client.channel === channel );
@@ -120,12 +123,13 @@ io.sockets.on('connection', function(socket) {
       // io.sockets.in(channel).emit('on_connect', `${socket_id} connected on ${channel} (${socket_ids.length})`);
       io.sockets.in(channel).emit(ON_CONNECT, {
         'action': 'connect', 
-        'socket_id': socket_id,
-        'channel': channel,
+        socket_id,
+        channel,
+        identifier,
         'connected_clients': total_channel_clients.length
       });
   
-      console.log("Incoming channel: " + channel);
+      console.log("Incoming channel: " + channel + " with identifier: " + identifier);
     });
 
     socket.on(LEAVE_CHANNEL, function(channel) {
