@@ -1,16 +1,14 @@
 require('dotenv').config();
-const express = require('express');
-const app = express();
-const httpServer = require('http').Server(app);
-const port = process.env['PORT'];
-const io = require('socket.io')(httpServer, {
-  cors: {
-    origin: '*'
-  }
-});
-
-// App setting
-const logging = true;
+const express = require('express'),
+      app = express(),
+      httpServer = require('http').Server(app),
+      port = process.env['PORT'],
+      logging = process.env['LOGGING'],
+      io = require('socket.io')(httpServer, {
+        cors: {
+          origin: '*'
+        }
+      });
 
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
@@ -95,7 +93,7 @@ app.post('/channel_clients', (req, res) => {
 // handle incoming connections from clients
 io.sockets.on('connection', function(socket) {
   let socket_id = socket.client.conn.id;
-  console.log('connect from: ', socket_id);
+  if ( logging ) console.log('connect from: ', socket_id);
 
     socket.onAny((eventName, channel, data) => {
       // Match current event with preserved events
@@ -103,7 +101,7 @@ io.sockets.on('connection', function(socket) {
 
       // Don't emit if the event is a preserved action event
       if ( preserved_event === undefined ) {
-        console.log("Whisper from: " + channel + " using socket ID " + socket_id);
+        if ( logging ) console.log("Whisper from: " + channel + " using socket ID " + socket_id);
 
         // Broadcast to others without sender
         socket.broadcast.to(channel).emit(eventName, data);
@@ -134,17 +132,17 @@ io.sockets.on('connection', function(socket) {
         'connected_clients': total_channel_clients.length
       });
   
-      console.log("Incoming channel: " + channel + " with identifier: " + identifier);
+      if ( logging ) console.log("Incoming channel: " + channel + " with identifier: " + identifier);
     });
 
     socket.on(LEAVE_CHANNEL, function(channel) {
       socket.leave(channel);
   
-      console.log("Leaving channel: " + channel);
+      if ( logging ) console.log("Leaving channel: " + channel);
     });
 
     socket.on(DISCONNECT, (reason) => {
-      console.log("DISCONNECT: ", socket_id);
+      if ( logging ) console.log("DISCONNECT: ", socket_id);
 
       try {
         // Broadcast to other clients
@@ -165,7 +163,7 @@ io.sockets.on('connection', function(socket) {
             'connected_clients': total_channel_clients.length
           });
       } catch (error) {
-        console.log('DISCONNECT ERROR: ' + error);
+        if ( logging ) console.log('DISCONNECT ERROR: ' + error);
       }
       
     });
