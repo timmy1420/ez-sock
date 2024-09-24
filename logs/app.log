@@ -1,0 +1,21 @@
+{"level":"info","message":"Server running on port 3000","timestamp":"2024-09-24T19:49:59.577Z"}
+{"level":"info","message":"New connection from: DCbGBo-38P4O6khMAAAA","timestamp":"2024-09-24T19:49:59.929Z"}
+{"level":"info","message":"Joined channel: my_channel, identifier: my_identifier","timestamp":"2024-09-24T19:49:59.946Z"}
+{"level":"info","message":"Disconnected from: my_channel, socket ID: DCbGBo-38P4O6khMAAAA","timestamp":"2024-09-24T19:50:05.053Z"}
+{"level":"info","message":"New connection from: 7JNv4KwEaQGdccIbAAAC","timestamp":"2024-09-24T19:50:18.121Z"}
+{"level":"info","message":"Joined channel: my_channel, identifier: my_identifier","timestamp":"2024-09-24T19:50:18.284Z"}
+{"level":"info","message":"Whisper from: my_channel, socket ID: 7JNv4KwEaQGdccIbAAAC","timestamp":"2024-09-24T19:50:21.388Z"}
+{"level":"info","message":"New connection from: u5K2dFynC3STznbNAAAE","timestamp":"2024-09-24T19:50:29.126Z"}
+{"level":"info","message":"Joined channel: my_channel, identifier: my_identifier","timestamp":"2024-09-24T19:50:29.262Z"}
+{"level":"info","message":"Whisper from: my_channel, socket ID: u5K2dFynC3STznbNAAAE","timestamp":"2024-09-24T19:50:31.298Z"}
+{"level":"info","message":"Whisper from: my_channel, socket ID: u5K2dFynC3STznbNAAAE","timestamp":"2024-09-24T19:50:31.735Z"}
+{"level":"info","message":"Whisper from: my_channel, socket ID: u5K2dFynC3STznbNAAAE","timestamp":"2024-09-24T19:50:31.888Z"}
+{"level":"info","message":"Whisper from: my_channel, socket ID: u5K2dFynC3STznbNAAAE","timestamp":"2024-09-24T19:50:32.031Z"}
+{"level":"info","message":"Whisper from: my_channel, socket ID: u5K2dFynC3STznbNAAAE","timestamp":"2024-09-24T19:50:32.157Z"}
+{"level":"info","message":"Whisper from: my_channel, socket ID: u5K2dFynC3STznbNAAAE","timestamp":"2024-09-24T19:50:32.313Z"}
+{"level":"info","message":"Whisper from: my_channel, socket ID: u5K2dFynC3STznbNAAAE","timestamp":"2024-09-24T19:50:32.784Z"}
+{"level":"info","message":"Leaving channel: my_channel","timestamp":"2024-09-24T19:50:36.293Z"}
+{"level":"info","message":"Leaving channel: my_channel","timestamp":"2024-09-24T19:50:37.277Z"}
+{"level":"info","message":"Joined channel: my_channel, identifier: my_identifier","timestamp":"2024-09-24T19:50:38.697Z"}
+{"level":"info","message":"Joined channel: my_channel, identifier: my_identifier","timestamp":"2024-09-24T19:50:40.525Z"}
+{"level":"info","message":"Disconnected from: my_channel, socket ID: u5K2dFynC3STznbNAAAE","timestamp":"2024-09-24T19:50:42.020Z"}
