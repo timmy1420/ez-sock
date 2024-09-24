@@ -224,6 +224,11 @@ if __name__ == '__main__':
     start()
 ```
 
+# Run backend
+```bash
+node src/index.js
+```
+
 # Contributing
 There are no specific contribution guidelines at this time. Please follow standard coding principles. For questions or issues, reach out via GitHub.
 
