@@ -16,6 +16,10 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Increase payload limit to 384 MB
+// app.use(express.json({ limit: '384mb' })) // for parsing application/json
+// app.use(express.urlencoded({ limit: '384mb', extended: true })) // for parsing application/x-www-form-urlencoded
+
 /**
  * Route to emit an event to a specific channel
  */
